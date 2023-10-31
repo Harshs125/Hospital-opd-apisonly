@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_31_074043) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_31_081803) do
   create_table "doctors", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -21,6 +21,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_31_074043) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_valid"
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string "name"
+    t.integer "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
