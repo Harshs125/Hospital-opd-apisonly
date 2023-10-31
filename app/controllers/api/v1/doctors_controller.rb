@@ -42,6 +42,6 @@ class Api::V1::DoctorsController < ApplicationController
 
     
     def doctor_params
-        params.require(:doctor).permit(:name,:email,:mobile,:timing_from,:timing_to, specialization:[])
+        params.require(:doctor).permit(:name,:email,:mobile,:timing_from,:timing_to,specialization:[])
     end
 end

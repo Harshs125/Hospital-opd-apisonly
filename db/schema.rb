@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_31_063149) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_31_074043) do
   create_table "doctors", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "mobile"
     t.text "specialization"
-    t.time "timing_from"
-    t.time "timing_to"
+    t.string "timing_from"
+    t.string "timing_to"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_valid"
   end
 
 end
