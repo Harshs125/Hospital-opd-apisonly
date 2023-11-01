@@ -40,8 +40,38 @@ class Api::V1::DoctorsController < ApplicationController
         render json: { status: 'ERROR', message: 'Doctor not found', data: {} }, status: :not_found
     end
 
-    
+    def register_doctor
+        doctor_id = params[:doctor_id]
+        doctor=Doctor.find(doctor_id)
+        @user = User.new(
+        username: doctor.name,
+        email: doctor.email,
+        password: "harsh@12345",
+        password_confirmation: "harsh@12345",
+        # encrypted_password: "doctor@1234",
+        role: :doctor
+        )
+        if @user.save
+            UserMailer.with(user: @user).confirmation_email.deliver_now
+            doctor.is_valid=true
+            doctor.doctor_id=@user.id
+            doctor.save
+            render json: {
+                status: 'SUCCESS',
+                message: 'Doctor registered successfully',
+                data: @user
+            }, status: :ok
+        else
+            render json: {
+                status: 'ERROR',
+                message: 'Doctor registration failed',
+                data: @user.errors
+            }, status: :unprocessable_entity
+        end
+    end
+
     def doctor_params
         params.require(:doctor).permit(:name,:email,:mobile,:timing_from,:timing_to,specialization:[])
     end
+
 end
