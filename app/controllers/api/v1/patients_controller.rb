@@ -1,6 +1,8 @@
 class Api::V1::PatientsController < ApplicationController
+    include DoctorAuthentication
+
     before_action :set_patient,only: [:show,:update,:destroy]
-    
+
     def index
         patients=Patient.all
         render json:{status:'SUCCCESS', message:'Loaded all patients',data:patients},status: :ok

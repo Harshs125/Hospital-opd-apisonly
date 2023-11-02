@@ -1,6 +1,6 @@
 class Api::V1::PatientRecordsController < ApplicationController
+    include DoctorAuthentication
     before_action :set_patient_record, only: [:show,:update,:destroy]
-
     def index
         patient=Patient.find(params[:patient_id])
         patient_records=patient.patient_records
@@ -14,7 +14,7 @@ class Api::V1::PatientRecordsController < ApplicationController
     def create
         patient=Patient.find(params[:patient_id])
         patient_record=patient.patient_records.new(patient_record_params)
-
+        patient_record['diagnosed_by']=@current_user['id']
         if patient_record.save
             render json: {status: 'SUCCESS', message: 'Patient record created successfully ',data:patient_record},status: :ok
         else

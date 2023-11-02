@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_01_100824) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_02_094639) do
   create_table "doctors", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -29,8 +29,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_01_100824) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "diagnosed_with"
-    t.integer "diagnosed_by"
     t.string "prescription"
+    t.integer "diagnosed_by"
     t.index ["patient_id"], name: "index_patient_records_on_patient_id"
   end
 
@@ -66,5 +66,5 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_01_100824) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "patient_records", "doctors", column: "diagnosed_by"
+  add_foreign_key "patient_records", "users", column: "diagnosed_by"
 end
