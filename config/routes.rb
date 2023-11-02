@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :doctors do
         collection do
           post:register_doctor
+          post:suspend_doctor
         end
       end
       resources :services, only:[:create,:show,:update,:destroy,:index]

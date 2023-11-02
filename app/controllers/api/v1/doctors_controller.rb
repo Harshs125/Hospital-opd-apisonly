@@ -1,7 +1,7 @@
 class Api::V1::DoctorsController < ApplicationController
     include AdminAuthentication
     before_action :authenticate_request,except: [:create]
-    before_action :authenticate_admin , only: [:index,:show,:destroy,:register_doctor]
+    before_action :authenticate_admin , only: [:index,:show,:destroy,:register_doctor,:suspend_doctor]
     def create  
         doctor=Doctor.new(doctor_params)
         if doctor.save
@@ -50,33 +50,55 @@ class Api::V1::DoctorsController < ApplicationController
     def register_doctor
         doctor_id = params[:doctor_id]
         doctor=Doctor.find(doctor_id)
-        @user = User.new(
-        username: doctor.name,
-        email: doctor.email,
-        password: "harsh@12345",
-        password_confirmation: "harsh@12345",
-        # encrypted_password: "doctor@1234",
-        role: :doctor
-        )
-        if @user.save
-            UserMailer.with(user: @user).confirmation_email.deliver_now
-            doctor.is_valid=true
-            doctor.doctor_id=@user.id
-            doctor.save
-            render json: {
-                status: 'SUCCESS',
-                message: 'Doctor registered successfully',
-                data: @user
+        if doctor['doctor_id']
+           doctor['is_valid']=true
+           doctor['consultation_charge']=params[:consultation_charge]
+           doctor.save
+           render json: {
+            status: 'SUCCESS',
+            message: 'Doctor account reactivated',
             }, status: :ok
+
         else
-            render json: {
-                status: 'ERROR',
-                message: 'Doctor registration failed',
-                data: @user.errors
-            }, status: :unprocessable_entity
+            @user = User.new(
+            username: doctor.name,
+            email: doctor.email,
+            password: "harsh@12345",
+            password_confirmation: "harsh@12345",
+            # encrypted_password: "doctor@1234",
+            role: :doctor
+            )
+            if @user.save
+                UserMailer.with(user: @user).confirmation_email.deliver_now
+                doctor.is_valid=true
+                doctor.doctor_id=@user.id
+                doctor.save
+                render json: {
+                    status: 'SUCCESS',
+                    message: 'Doctor registered successfully',
+                    data: @user
+                }, status: :ok
+            else
+                render json: {
+                    status: 'ERROR',
+                    message: 'Doctor registration failed',
+                    data: @user.errors
+                }, status: :unprocessable_entity
+            end
         end
     end
 
+    def suspend_doctor
+        doctor_id = params[:doctor_id]
+        doctor=Doctor.find(doctor_id)
+        doctor['is_valid']=false
+        doctor.save
+        render json:{
+            message:'the doctor account is temprorarily suspended by the admin'
+        },status: :ok
+    end
+
+    def 
     def doctor_params
         params.require(:doctor).permit(:name,:email,:mobile,:timing_from,:timing_to,specialization:[])
     end
