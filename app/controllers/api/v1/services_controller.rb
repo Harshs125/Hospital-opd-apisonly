@@ -1,4 +1,7 @@
 class Api::V1::ServicesController < ApplicationController
+    include AdminAuthentication
+
+
     def create
         service=Service.new(service_params)
         if service.save
