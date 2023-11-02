@@ -1,5 +1,8 @@
 class Api::V1::DoctorsController < ApplicationController
-    def create
+    include AdminAuthentication
+    before_action :authenticate_request,except: [:create]
+    before_action :authenticate_admin , only: [:index,:show,:destroy,:register_doctor]
+    def create  
         doctor=Doctor.new(doctor_params)
         if doctor.save
             render json:{status:'SUCCESS',message:'You are successfully registered',data:doctor},status: :ok
@@ -10,7 +13,6 @@ class Api::V1::DoctorsController < ApplicationController
 
     def index
         doctors=Doctor.all
-        puts "-------->>>>>>>>>>"
         render json:{status:'SUCCESS',message:'List of all Doctors',data:doctors},status: :ok
     end
 
@@ -34,6 +36,11 @@ class Api::V1::DoctorsController < ApplicationController
 
     def destroy
         doctor = Doctor.find(params[:id])
+        if doctor['is_valid']
+            user_id=doctor['doctor_id']
+            user=User.find(user_id)
+            user.destroy
+        end
         doctor.destroy
         render json: { status: 'SUCCESS', message: 'Doctor deleted', data: {} }, status: :ok
     rescue ActiveRecord::RecordNotFound
