@@ -44,6 +44,6 @@ class Api::V1::PatientRecordsController < ApplicationController
     end
 
     def patient_record_params
-        params.require(:patient_record).permit(:patient_id, :diagnosed_with, :diagnosed_by, :prescription)
+        params.require(:patient_record).permit(:patient_id, :diagnosed_with, :diagnosed_by, :prescription,:vaccine_id, :test_id, :service_id)
     end
 end
