@@ -15,6 +15,8 @@ Rails.application.routes.draw do
         end
       end
       resources :services, only:[:create,:show,:update,:destroy,:index]
+      resources :tests, only:[:create,:show,:update,:destroy,:index]
+      resources :vaccines , only: [:create,:show,:update,:destroy,:index]
       resources :patients do
         resources:patient_records, only: [:index,:create]
       end
