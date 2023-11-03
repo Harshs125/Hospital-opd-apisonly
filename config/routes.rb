@@ -20,7 +20,10 @@ Rails.application.routes.draw do
       resources :patients do
         resources:patient_records, only: [:index,:create]
       end
-      resources:patient_records,except: [:index,:create]
+      resources :invoices do
+        post 'generate', on: :member
+      end
+      resources :patient_records,except: [:index,:create]
     end
   end
 end

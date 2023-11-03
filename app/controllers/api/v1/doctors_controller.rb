@@ -2,7 +2,8 @@ class Api::V1::DoctorsController < ApplicationController
     include AdminAuthentication
     before_action :authenticate_request,except: [:create]
     before_action :authenticate_admin , only: [:index,:show,:destroy,:register_doctor,:suspend_doctor]
-    def create  
+    def create 
+        puts "--------------->>>>>>> #{doctor_params}"
         doctor=Doctor.new(doctor_params)
         if doctor.save
             render json:{status:'SUCCESS',message:'You are successfully registered',data:doctor},status: :ok
@@ -56,15 +57,15 @@ class Api::V1::DoctorsController < ApplicationController
            doctor.save
            render json: {
             status: 'SUCCESS',
-            message: 'Doctor account reactivated',
+            message: 'Doctor account reactivate',
             }, status: :ok
 
         else
             @user = User.new(
             username: doctor.name,
             email: doctor.email,
-            password: "harsh@12345",
-            password_confirmation: "harsh@12345",
+            password: "xyz@12345",
+            password_confirmation: "xyz@12345",
             # encrypted_password: "doctor@1234",
             role: :doctor
             )
@@ -72,6 +73,7 @@ class Api::V1::DoctorsController < ApplicationController
                 UserMailer.with(user: @user).confirmation_email.deliver_now
                 doctor.is_valid=true
                 doctor.doctor_id=@user.id
+                doctor.consultation_charge=params[:consultation_charge]
                 doctor.save
                 render json: {
                     status: 'SUCCESS',
@@ -98,7 +100,7 @@ class Api::V1::DoctorsController < ApplicationController
         },status: :ok
     end
 
-    def 
+
     def doctor_params
         params.require(:doctor).permit(:name,:email,:mobile,:timing_from,:timing_to,specialization:[])
     end
