@@ -1,6 +1,7 @@
 class Api::V1::InvoicesController < ApplicationController
     include DoctorAuthentication
     def generate
+        pdf_details={}
         cost_hash={}
         record_id= params[:id]
         patient_record=PatientRecord.find(record_id)
@@ -11,7 +12,10 @@ class Api::V1::InvoicesController < ApplicationController
         cost_hash['doctor_fee']=doctor_details['consultation_charge']
         amount=doctor_details['consultation_charge']
         patient_details=Patient.find(patient_record['patient_id'])
-        patient_name=patient_details['name']
+        pdf_details['patient_name']=patient_details['name']
+        pdf_details['email']=patient_details['email']
+        pdf_details['diagnosed_by']=doctor_details['name']
+        pdf_details['biiling']=cost_hash
         patient_email=patient_details['email']
         if service_id
             service_details=Service.find(service_id)
@@ -34,10 +38,10 @@ class Api::V1::InvoicesController < ApplicationController
         else
             cost_hash['vaccines']=0
         end
-    
+
+        pdf_details['amount']=amount
         render json:{
-            message:cost_hash,
-            amount:amount
+            message:pdf_details,
             },status: :ok
     end
 end

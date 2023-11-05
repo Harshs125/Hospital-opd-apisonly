@@ -56,3 +56,4 @@ gem "jwt", "~> 2.7"
 gem 'byebug', platform: :mri
 
 gem "wicked_pdf", "~> 2.7"
+
