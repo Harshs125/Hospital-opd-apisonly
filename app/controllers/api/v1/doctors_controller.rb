@@ -3,7 +3,6 @@ class Api::V1::DoctorsController < ApplicationController
     before_action :authenticate_request,except: [:create]
     before_action :authenticate_admin , only: [:index,:show,:destroy,:register_doctor,:suspend_doctor]
     def create 
-        puts "--------------->>>>>>> #{doctor_params}"
         doctor=Doctor.new(doctor_params)
         if doctor.save
             render json:{status:'SUCCESS',message:'You are successfully registered',data:doctor},status: :ok

@@ -53,7 +53,15 @@ gem "jsonapi-serializer", "~> 2.2"
 
 gem "jwt", "~> 2.7"
 
-gem 'byebug', platform: :mri
+
 
 gem "wicked_pdf", "~> 2.7"
 
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  gem 'byebug', platform: :mri
+end
+
+
+gem "faker", "~> 3.2"
