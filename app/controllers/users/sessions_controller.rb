@@ -32,7 +32,7 @@ class Users::SessionsController < Devise::SessionsController
         end
       rescue JWT::ExpiredSignature
         # Handle expired token error
-        render json: { error: 'Token has expired' }, status: :unauthorized
+        render json: { error: 'Token has expired' }, status: :ok
       rescue JWT::DecodeError
         # Handle invalid token error
         render json: { error: 'Invalid token' }, status: :unauthorized
