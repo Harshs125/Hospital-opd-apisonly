@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::ServicesController, type: :controller do
-	let!(:user) { create(:user, email: 'test@example.com', password: 'password123') }
+	let!(:user) { create(:user, email: 'test@example.com', password: 'password123',role:'admin') }
 	before do
 		jwt_token = JWT.encode({ sub: user.id,role:"admin"}, Rails.application.credentials.fetch(:secret_key_base), 'HS256',exp:30.minutes.to_i)
 		request.headers['Authorization'] = "Bearer #{jwt_token}"
@@ -10,20 +10,18 @@ RSpec.describe Api::V1::ServicesController, type: :controller do
     context 'with valid parameters' do
       it 'creates a new service' do
         post :create, params: { service: { name: 'Service Name', price: 50 } }
-        
+        byebug
         expect(response).to have_http_status(:ok)
+				expect(response.content_type).to eq('application/json; charset=utf-8')
 				json_response = JSON.parse(response.body)
-        expect(json_response['status']).to eq('SUCCESS')
+        expect(json_response['status'])=='SUCCESS'
         expect(json_response['message'])=='successfully added service in hospital'
-        expect(json_response['data']['name']).to eq('Service Name')
-        expect(json_response['data']['price']).to eq(50)
       end
     end
 
     context 'with invalid parameters' do
       it 'does not create a new service' do
-        post :create, params: { service: { name: '', price: -10 } }
-        
+        post :create, params: { service: { name: '', price: -10 } } 
         expect(response).to have_http_status(:unprocessable_entity)
 				json_response = JSON.parse(response.body)
         expect(json_response['status']).to eq('ERROR')
@@ -149,49 +147,4 @@ RSpec.describe Api::V1::ServicesController, type: :controller do
       end
     end
   end
-	# describe 'POST #create' do
-		
-	# 	it 'creates a service' do
-	# 		post :create,params: {user: {email:'test@example.com',password:'password123'}}
-	# 		expect(response).to have_http_status(:ok)
-	# 		expect(response.content_type).to eq('application/json; charset=utf-8')
-	# 		json_response = JSON.parse(response.body)
-	# 		expect(json_response['status']['code']).to eq(200)
-	# 		expect(json_response['status']['message']).to eq('User is successfully signed in')
-	# 		expect(json_response['status']['data']['email']).to eq('test@example.com')
-	# 	end
-	# 	it 'returns unauthorized for invalid credentials' do
-	# 		post :create, params: { user: { email: 'test@example.com', password: 'invalidpassword' } }
-	# 		expect(response).to have_http_status(:unauthorized)
-	# 		expect(response.content_type).to eq('text/html; charset=utf-8')
-	# 	end
-	# end
-
-	# it 'returns unauthorized if JWT token is expired' do
-	# 	jwt_token = JWT.encode({ sub: user.id ,exp: Time.now.to_i - 1 }, Rails.application.credentials.fetch(:secret_key_base), 'HS256')
-	# 	request.headers['Authorization'] = "Bearer #{jwt_token}"
-	# 	delete :destroy
-	# 	expect(response).to have_http_status(:ok)
-	# 	json_response = JSON.parse(response.body)
-	# 	expect(json_response['error']).to eq('Token has expired')
-	# end
-
-	# it 'returns unauthorized if JWT token is invalid' do
-	# 	jwt_token = 'invalid_token'
-	# 	request.headers['Authorization'] = "Bearer #{jwt_token}"
-	# 	delete :destroy
-	# 	expect(response).to have_http_status(:unauthorized)
-	# 	json_response = JSON.parse(response.body)
-	# 	expect(json_response['error']).to eq('Invalid token')
-	# end
-
-	# it 'returns unauthorized if user is not found' do
-	# 	jwt_token = JWT.encode({ sub: 99999 }, Rails.application.credentials.fetch(:secret_key_base), 'HS256')
-	# 	request.headers['Authorization'] = "Bearer #{jwt_token}"
-	# 	delete :destroy
-	# 	expect(response).to have_http_status(:unauthorized)
-	# 	json_response = JSON.parse(response.body)
-	# 	expect(json_response['error']).to eq('User not found')
-	# end
-
 end

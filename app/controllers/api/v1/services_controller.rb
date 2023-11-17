@@ -10,7 +10,7 @@ class Api::V1::ServicesController < ApplicationController
             render json: {status: 'ERROR', message: 'service cannot be added',data:service.errors},status: :unprocessable_entity
         end
     end
-
+    
     def index
         services=Service.all
         render json:{status:'SUCCESS',message:'List of all services',data:services},status: :ok
