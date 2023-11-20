@@ -20,7 +20,7 @@ class Api::V1::PatientRecordsController < ApplicationController
         else
             render json: {status: 'ERROR', message: 'Patient record creation failed',data:patient_record.errors},status: :unprocessable_entity
         end
-    end
+    end 
 
     def update
         if @patient_record.update(patient_record_params)

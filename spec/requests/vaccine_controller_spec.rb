@@ -45,7 +45,5 @@ RSpec.describe Api::V1::VaccinesController, type: :controller do
         expect(json_response['data'][1]['price'])==75
         end
     end
-
-  # Similarly, you can write tests for show, update, and destroy actionsend
 end
     

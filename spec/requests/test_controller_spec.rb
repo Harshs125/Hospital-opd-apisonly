@@ -45,7 +45,5 @@ RSpec.describe Api::V1::TestsController, type: :controller do
         expect(json_response['data'][1]['price']).to eq(75)
         end
     end
-
-  # Similarly, you can write tests for show, update, and destroy actionsend
 end
     
