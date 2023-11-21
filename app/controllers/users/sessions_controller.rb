@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+
 
 class Users::SessionsController < Devise::SessionsController
     before_action :authenticate_request, except: [:new, :create]
@@ -31,13 +31,10 @@ class Users::SessionsController < Devise::SessionsController
           },status: :Unauthorized
         end
       rescue JWT::ExpiredSignature
-        # Handle expired token error
         render json: { error: 'Token has expired' }, status: :ok
       rescue JWT::DecodeError
-        # Handle invalid token error
         render json: { error: 'Invalid token' }, status: :unauthorized
       rescue ActiveRecord::RecordNotFound
-        # Handle user not found error
         render json: { error: 'User not found' }, status: :unauthorized
       end      
     end

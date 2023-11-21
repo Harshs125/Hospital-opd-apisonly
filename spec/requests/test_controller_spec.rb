@@ -31,18 +31,18 @@ RSpec.describe Api::V1::TestsController, type: :controller do
 
     describe 'GET #index' do
         it 'returns a list of all tests' do
-        create(:test, name: 'Test 1', price: 50)
-        create(:test, name: 'Test 2', price: 75)
+            create(:test, name: 'Test 1', price: 50)
+            create(:test, name: 'Test 2', price: 75)
 
-        get :index
+            get :index
 
-        expect(response).to have_http_status(:ok)
-        json_response = JSON.parse(response.body)
-        expect(json_response['status'])=='SUCCESS'
-        expect(json_response['message'])=='List of all Tests'
-        expect(json_response['data'].count).to eq(2)
-        expect(json_response['data'][0]['name']).to eq('Test 1')
-        expect(json_response['data'][1]['price']).to eq(75)
+            expect(response).to have_http_status(:ok)
+            json_response = JSON.parse(response.body)
+            expect(json_response['status'])=='SUCCESS'
+            expect(json_response['message'])=='List of all Tests'
+            expect(json_response['data'].count).to eq(2)
+            expect(json_response['data'][0]['name']).to eq('Test 1')
+            expect(json_response['data'][1]['price']).to eq(75)
         end
     end
 end

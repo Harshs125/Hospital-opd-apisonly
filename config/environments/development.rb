@@ -1,4 +1,6 @@
 require "active_support/core_ext/integer/time"
+app_config = YAML.safe_load(File.read(File.expand_path('application.yml',__dir__)))
+email_config = app_config[Rails.env] || {}
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -70,12 +72,12 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:         'smtp.gmail.com',
-    port:            587,
-    domain:          'example.com',
-    user_name: 'harsh.soni12501@gmail.com',
-    password:  'ywpvnjffjqcwzjpr',
-    authentication:  'plain',
+    address:         email_config['email_address'],
+    port:            email_config['email_port'],
+    domain:          email_config['email_domain'],
+    user_name: email_config['email_username'],
+    password:  email_config['email_password'],
+    authentication:  email_config['email_authentication'],
     enable_starttls: true,
     open_timeout:    5,
     read_timeout:    5 }

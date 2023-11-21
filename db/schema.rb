@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_03_071605) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_20_071721) do
   create_table "doctors", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -26,7 +26,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_03_071605) do
   end
 
   create_table "patient_records", force: :cascade do |t|
-    t.integer "patient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "diagnosed_with"
@@ -35,6 +34,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_03_071605) do
     t.integer "vaccine_id"
     t.integer "test_id"
     t.integer "service_id"
+    t.integer "patient_id"
     t.index ["patient_id"], name: "index_patient_records_on_patient_id"
   end
 
@@ -86,6 +86,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_03_071605) do
     t.index ["name"], name: "index_Vaccines_on_name", unique: true
   end
 
+  add_foreign_key "patient_records", "patients"
   add_foreign_key "patient_records", "services"
   add_foreign_key "patient_records", "tests"
   add_foreign_key "patient_records", "users", column: "diagnosed_by"

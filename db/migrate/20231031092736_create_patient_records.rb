@@ -8,3 +8,4 @@ class CreatePatientRecords < ActiveRecord::Migration[7.1]
     add_index :patient_records, :patient_id
   end
 end
+ 
