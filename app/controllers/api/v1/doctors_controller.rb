@@ -51,52 +51,55 @@ class Api::V1::DoctorsController < ApplicationController
         doctor_id = params[:doctor_id]
         doctor=Doctor.find(doctor_id)
         if doctor['doctor_id']
-           doctor['is_valid']=true
-           doctor['consultation_charge']=params[:consultation_charge]
-           doctor.save
-           render json: {
+          doctor['is_valid']=true
+          doctor['consultation_charge']=params[:consultation_charge]
+          doctor.save
+          render json: {
             status: 'SUCCESS',
             message: 'Doctor account reactivate',
             }, status: :ok
-
         else
-            @user = User.new(
-            username: doctor.name,
-            email: doctor.email,
-            password: "xyz@12345",
-            password_confirmation: "xyz@12345",
-            # encrypted_password: "doctor@1234",
-            role: :doctor
-            )
-            if @user.save
-                UserMailer.with(user: @user).confirmation_email.deliver_now
-                doctor.is_valid=true
-                doctor.doctor_id=@user.id
-                doctor.consultation_charge=params[:consultation_charge]
-                doctor.save
-                render json: {
-                    status: 'SUCCESS',
-                    message: 'Doctor registered successfully',
-                    data: @user
-                }, status: :ok
-            else
-                render json: {
-                    status: 'ERROR',
-                    message: 'Doctor registration failed',
-                    data: @user.errors
-                }, status: :unprocessable_entity
-            end
+          @user = User.new(
+          username: doctor.name,
+          email: doctor.email,
+          password: "xyz@12345",
+          password_confirmation: "xyz@12345",
+          # encrypted_password: "doctor@1234",
+          role: :doctor
+          )
+          if @user.save
+            UserMailer.with(user: @user).confirmation_email.deliver_now
+            doctor.is_valid=true
+            doctor.doctor_id=@user.id
+            doctor.consultation_charge=params[:consultation_charge]
+            doctor.save
+            render json: {
+                status: 'SUCCESS',
+                message: 'Doctor registered successfully',
+                data: @user
+            }, status: :ok
+          else
+            render json: {
+                status: 'ERROR',
+                message: 'Doctor registration failed',
+                data: @user.errors
+            }, status: :unprocessable_entity
+          end
         end
+      rescue ActiveRecord::RecordNotFound
+        render json: { status: 'ERROR', message: 'Doctor not found', data: {} }, status: :not_found
     end
 
     def suspend_doctor
-        doctor_id = params[:doctor_id]
-        doctor=Doctor.find(doctor_id)
-        doctor['is_valid']=false
-        doctor.save
-        render json:{
-            message:'the doctor account is temprorarily suspended by the admin'
-        },status: :ok
+      doctor_id = params[:doctor_id]
+      doctor=Doctor.find(doctor_id)
+      doctor['is_valid']=false
+      doctor.save
+      render json:{
+          message:'the doctor account is temprorarily suspended by the admin'
+      },status: :ok
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: 'ERROR', message: 'Doctor not found', data: {} }, status: :not_found 
     end
 
 

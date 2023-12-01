@@ -61,6 +61,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'byebug', platform: :mri
+  gem 'rspec_api_documentation'
 end
 
 

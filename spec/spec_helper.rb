@@ -14,12 +14,14 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'simplecov'
+require 'rspec_api_documentation'
 SimpleCov.start
 
 SimpleCov.add_filter 'vendor'
 
 ENV['RAILS_ENV'] ||= 'test'
 RSpec.configure do |config|
+  config.include RspecApiDocumentation::DSL,type: :request
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
